@@ -1,3 +1,5 @@
+import DraggableFab from './DraggableFab'
+
 export type Screen = 'today' | 'add' | 'history' | 'stats' | 'settings'
 
 const TABS: { screen: Screen; label: string; icon: string }[] = [
@@ -36,15 +38,7 @@ export default function BottomNav({ screen, onChange }: { screen: Screen; onChan
         </div>
       </nav>
 
-      {screen !== 'add' && (
-        <button
-          onClick={() => onChange('add')}
-          aria-label="식사 기록 추가"
-          className="fixed right-4 bottom-24 z-50 w-14 h-14 rounded-full bg-navy hover:bg-navy2 text-white text-3xl flex items-center justify-center shadow-lg shadow-navy/30 transition-colors"
-        >
-          +
-        </button>
-      )}
+      {screen !== 'add' && <DraggableFab onOpen={() => onChange('add')} />}
     </>
   )
 }
