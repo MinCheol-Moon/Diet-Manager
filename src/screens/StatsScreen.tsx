@@ -20,11 +20,14 @@ export default function StatsScreen({ onGoSettings }: { onGoSettings: () => void
   })
 
   return (
-    <div className="space-y-6">
-      <h1 className="text-white text-xl font-bold">통계</h1>
+    <div className="space-y-5">
+      <div>
+        <h1 className="text-ink text-2xl font-extrabold">통계</h1>
+        <p className="text-muted text-sm mt-1">주간 추이와 체중 변화를 확인하세요</p>
+      </div>
 
-      <section className="bg-gray-900 rounded-xl p-5">
-        <h2 className="text-white font-bold text-sm mb-3">주간 칼로리 추이</h2>
+      <section className="card p-5">
+        <h2 className="text-ink font-bold text-sm mb-3">주간 칼로리 추이</h2>
         <CalorieTrendChart data={weekly} targetMax={settings.targetCaloriesMax} />
       </section>
 

@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { clearAll, deleteQuickMenu, exportAll, updateSettings, useQuickMenus, useSettings } from '../lib/store'
 import { AI_MODELS } from '../lib/constants'
+import type { Settings } from '../lib/types'
 
 export default function SettingsScreen() {
   const settings = useSettings()
@@ -12,9 +13,9 @@ export default function SettingsScreen() {
     window.setTimeout(() => setSavedMsg(''), 2000)
   }
 
-  function num(key: keyof typeof settings, value: string) {
+  function num(key: keyof Settings, value: string) {
     const n = Number(value)
-    updateSettings({ [key]: Number.isFinite(n) ? n : 0 })
+    updateSettings({ [key]: Number.isFinite(n) ? n : 0 } as Partial<Settings>)
   }
 
   async function toggleNotifications(checked: boolean) {
@@ -46,8 +47,11 @@ export default function SettingsScreen() {
   }
 
   return (
-    <div className="space-y-6">
-      <h1 className="text-white text-xl font-bold">설정</h1>
+    <div className="space-y-5">
+      <div>
+        <h1 className="text-ink text-2xl font-extrabold">설정</h1>
+        <p className="text-muted text-sm mt-1">목표와 알림, AI 기능을 관리하세요</p>
+      </div>
 
       <Section title="프로필">
         <div className="grid grid-cols-2 gap-3">
@@ -70,12 +74,12 @@ export default function SettingsScreen() {
           <Field label="2~5일차 칼로리" type="number" value={settings.fmdDay2to5Calories} onChange={v => num('fmdDay2to5Calories', v)} />
         </div>
         <div>
-          <label className="text-gray-500 text-[11px] mb-1 block">사이클 시작일 (25일 일반식 + 5일 FMD)</label>
+          <label className="text-faint text-[11px] mb-1 block">사이클 시작일 (25일 일반식 + 5일 FMD)</label>
           <input
             type="date"
             value={settings.fmdCycleStartDate ?? ''}
             onChange={e => updateSettings({ fmdCycleStartDate: e.target.value || null })}
-            className="w-full bg-gray-950 border border-gray-700 rounded-xl px-3 py-2.5 text-white focus:outline-none focus:border-emerald-500"
+            className="field"
           />
         </div>
       </Section>
@@ -86,30 +90,30 @@ export default function SettingsScreen() {
           <Field label="점심" type="time" value={settings.lunchTime} onChange={v => updateSettings({ lunchTime: v })} />
           <Field label="저녁" type="time" value={settings.dinnerTime} onChange={v => updateSettings({ dinnerTime: v })} />
         </div>
-        <label className="flex items-center gap-2 text-gray-400 text-sm pt-1">
-          <input type="checkbox" checked={settings.notificationsEnabled} onChange={e => toggleNotifications(e.target.checked)} className="accent-emerald-600" />
+        <label className="flex items-center gap-2 text-muted text-sm pt-1">
+          <input type="checkbox" checked={settings.notificationsEnabled} onChange={e => toggleNotifications(e.target.checked)} className="accent-navy w-4 h-4" />
           앱을 열어둔 동안 식사·나트륨 알림 받기
         </label>
-        <p className="text-gray-600 text-xs">브라우저 알림은 앱이 열려 있을 때만 동작해요. iOS Safari는 백그라운드 푸시를 지원하지 않아요.</p>
+        <p className="text-faint text-xs">브라우저 알림은 앱이 열려 있을 때만 동작해요. iOS Safari는 백그라운드 푸시를 지원하지 않아요.</p>
       </Section>
 
       <Section title="AI 추정">
         <div>
-          <label className="text-gray-500 text-[11px] mb-1 block">Anthropic API 키 (브라우저에만 저장됨)</label>
+          <label className="text-faint text-[11px] mb-1 block">Anthropic API 키 (이 기기에만 저장됨)</label>
           <input
             type="password"
             value={settings.anthropicApiKey}
             onChange={e => updateSettings({ anthropicApiKey: e.target.value })}
             placeholder="sk-ant-..."
-            className="w-full bg-gray-950 border border-gray-700 rounded-xl px-3 py-2.5 text-white placeholder-gray-600 focus:outline-none focus:border-emerald-500"
+            className="field"
           />
         </div>
         <div>
-          <label className="text-gray-500 text-[11px] mb-1 block">사용할 모델</label>
+          <label className="text-faint text-[11px] mb-1 block">사용할 모델</label>
           <select
             value={settings.aiModel}
             onChange={e => updateSettings({ aiModel: e.target.value })}
-            className="w-full bg-gray-950 border border-gray-700 rounded-xl px-3 py-2.5 text-white focus:outline-none focus:border-emerald-500"
+            className="field"
           >
             {AI_MODELS.map(m => (
               <option key={m.id} value={m.id}>
@@ -118,23 +122,23 @@ export default function SettingsScreen() {
             ))}
           </select>
         </div>
-        <p className="text-gray-600 text-xs">
+        <p className="text-faint text-xs">
           메뉴 이름·사진 인식 시 본인 키로 Claude API를 직접 호출해요. 키는 서버로 전송되지 않고 이 기기에만 저장됩니다.
         </p>
       </Section>
 
       <Section title="나만의 메뉴 관리">
         {customMenus.length === 0 ? (
-          <p className="text-gray-500 text-sm">추가한 나만의 메뉴가 없어요. 기록 화면에서 추가할 수 있어요.</p>
+          <p className="text-faint text-sm">추가한 나만의 메뉴가 없어요. 기록 화면에서 추가할 수 있어요.</p>
         ) : (
           <div className="space-y-2">
             {customMenus.map(menu => (
-              <div key={menu.id} className="flex items-center justify-between bg-gray-950 rounded-xl px-4 py-2.5">
+              <div key={menu.id} className="flex items-center justify-between bg-canvas rounded-xl px-4 py-2.5">
                 <div className="min-w-0">
-                  <p className="text-white text-sm font-medium truncate">{menu.menuName}</p>
-                  <p className="text-gray-500 text-xs mt-0.5">{menu.calories}kcal</p>
+                  <p className="text-ink text-sm font-medium truncate">{menu.menuName}</p>
+                  <p className="text-faint text-xs mt-0.5">{menu.calories}kcal</p>
                 </div>
-                <button onClick={() => deleteQuickMenu(menu.id)} className="text-gray-600 hover:text-red-400 text-sm shrink-0 px-1">
+                <button onClick={() => deleteQuickMenu(menu.id)} className="text-faint hover:text-danger text-sm shrink-0 px-1">
                   ✕
                 </button>
               </div>
@@ -145,25 +149,25 @@ export default function SettingsScreen() {
 
       <Section title="데이터">
         <div className="flex gap-2">
-          <button onClick={handleExport} className="flex-1 bg-gray-800 hover:bg-gray-700 text-white text-sm font-medium py-2.5 rounded-xl transition-colors">
+          <button onClick={handleExport} className="flex-1 bg-canvas hover:bg-line text-ink text-sm font-medium py-2.5 rounded-xl transition-colors">
             백업 내보내기 (JSON)
           </button>
-          <button onClick={handleReset} className="flex-1 bg-red-900/40 hover:bg-red-900/60 text-red-300 text-sm font-medium py-2.5 rounded-xl transition-colors">
+          <button onClick={handleReset} className="flex-1 bg-danger/10 hover:bg-danger/20 text-danger text-sm font-medium py-2.5 rounded-xl transition-colors">
             전체 초기화
           </button>
         </div>
       </Section>
 
-      {savedMsg && <p className="text-emerald-400 text-sm text-center">{savedMsg}</p>}
-      <p className="text-gray-600 text-xs text-center pb-2">변경 사항은 자동으로 저장돼요.</p>
+      {savedMsg && <p className="text-good text-sm text-center">{savedMsg}</p>}
+      <p className="text-faint text-xs text-center pb-2">변경 사항은 자동으로 저장돼요.</p>
     </div>
   )
 }
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <section className="bg-gray-900 rounded-xl p-5 space-y-3">
-      <h2 className="text-white font-bold text-sm">{title}</h2>
+    <section className="card p-5 space-y-3">
+      <h2 className="text-ink font-bold text-sm">{title}</h2>
       {children}
     </section>
   )
@@ -184,14 +188,8 @@ function Field({
 }) {
   return (
     <div>
-      <label className="text-gray-500 text-[11px] mb-1 block">{label}</label>
-      <input
-        type={type}
-        step={step}
-        value={value}
-        onChange={e => onChange(e.target.value)}
-        className="w-full bg-gray-950 border border-gray-700 rounded-xl px-3 py-2.5 text-white focus:outline-none focus:border-emerald-500"
-      />
+      <label className="text-faint text-[11px] mb-1 block">{label}</label>
+      <input type={type} step={step} value={value} onChange={e => onChange(e.target.value)} className="field" />
     </div>
   )
 }

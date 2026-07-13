@@ -28,10 +28,10 @@ export default function WeightSection() {
   }
 
   return (
-    <div className="bg-gray-900 rounded-xl p-5">
+    <div className="card p-5">
       <div className="flex items-center justify-between mb-3">
-        <h2 className="text-white font-bold text-sm">체중 기록</h2>
-        {latest !== null && <span className="text-gray-400 text-xs">최근 {latest}kg</span>}
+        <h2 className="text-ink font-bold text-sm">체중 기록</h2>
+        {latest !== null && <span className="text-muted text-xs">최근 {latest}kg</span>}
       </div>
 
       <form onSubmit={handleSubmit} className="flex gap-2 mb-4">
@@ -42,31 +42,28 @@ export default function WeightSection() {
           value={weight}
           onChange={e => setWeight(e.target.value)}
           placeholder="오늘 체중 (kg)"
-          className="flex-1 bg-gray-950 border border-gray-700 rounded-xl px-4 py-2.5 text-white placeholder-gray-500 focus:outline-none focus:border-emerald-500"
+          className="field flex-1"
         />
-        <button
-          type="submit"
-          className="bg-emerald-600 hover:bg-emerald-500 text-white text-sm font-semibold px-4 rounded-xl transition-colors shrink-0"
-        >
+        <button type="submit" className="btn-primary text-sm px-5 shrink-0">
           기록
         </button>
       </form>
-      {error && <p className="text-red-400 text-xs mb-3">{error}</p>}
+      {error && <p className="text-danger text-xs mb-3">{error}</p>}
 
       {chartData.length < 2 ? (
-        <p className="text-gray-500 text-sm text-center py-6">체중을 2회 이상 기록하면 변화 그래프가 보여요</p>
+        <p className="text-faint text-sm text-center py-6">체중을 2회 이상 기록하면 변화 그래프가 보여요</p>
       ) : (
         <div className="h-40">
           <ResponsiveContainer width="100%" height="100%">
             <LineChart data={chartData} margin={{ top: 8, right: 8, left: -20, bottom: 0 }}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#1f2937" vertical={false} />
-              <XAxis dataKey="label" tick={{ fill: '#6b7280', fontSize: 11 }} axisLine={{ stroke: '#374151' }} tickLine={false} />
-              <YAxis domain={['dataMin - 1', 'dataMax + 1']} tick={{ fill: '#6b7280', fontSize: 11 }} axisLine={false} tickLine={false} />
+              <CartesianGrid strokeDasharray="3 3" stroke="#eef0f4" vertical={false} />
+              <XAxis dataKey="label" tick={{ fill: '#99a0ad', fontSize: 11 }} axisLine={{ stroke: '#e9eaf0' }} tickLine={false} />
+              <YAxis domain={['dataMin - 1', 'dataMax + 1']} tick={{ fill: '#99a0ad', fontSize: 11 }} axisLine={false} tickLine={false} />
               <Tooltip
                 formatter={value => [`${value}kg`, '체중']}
-                contentStyle={{ background: '#111827', border: '1px solid #374151', borderRadius: 8, fontSize: 12 }}
+                contentStyle={{ background: '#fff', border: '1px solid #e9eaf0', borderRadius: 10, fontSize: 12, boxShadow: '0 2px 10px rgba(20,24,45,.08)' }}
               />
-              <Line type="monotone" dataKey="weight" stroke="#34d399" strokeWidth={2} dot={{ r: 3 }} />
+              <Line type="monotone" dataKey="weight" stroke="#2c3a5e" strokeWidth={2.5} dot={{ r: 3, fill: '#2c3a5e' }} />
             </LineChart>
           </ResponsiveContainer>
         </div>

@@ -15,11 +15,14 @@ export default function App() {
 
   useMealReminders(settings, meals)
 
+  const dateLabel = new Date().toLocaleDateString('ko-KR', { month: 'long', day: 'numeric', weekday: 'short' })
+
   return (
-    <div className="min-h-screen bg-gray-950">
-      <header className="bg-gray-900 border-b border-gray-800 sticky top-0 z-40">
-        <div className="max-w-2xl mx-auto px-4 flex items-center h-12">
-          <span className="text-white font-bold text-base">🥗 식단관리</span>
+    <div className="min-h-screen bg-canvas">
+      <header className="bg-surface/85 backdrop-blur-md sticky top-0 z-40 border-b border-line">
+        <div className="max-w-2xl mx-auto px-4 flex items-center justify-between h-14">
+          <span className="text-ink font-extrabold text-[17px]">🥗 식단관리</span>
+          <span className="text-faint text-xs font-medium">{dateLabel}</span>
         </div>
       </header>
 

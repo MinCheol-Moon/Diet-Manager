@@ -59,69 +59,83 @@ export default function TodayScreen({ onAdd }: { onAdd: () => void }) {
   }
 
   return (
-    <div className="space-y-6">
-      <div>
-        <button onClick={onAdd} className="w-full text-left">
-          <h1 className="text-white text-xl font-bold mb-1">오늘 뭐 드셨나요?</h1>
-          <p className="text-gray-500 text-sm">
-            {now.toLocaleDateString('ko-KR', { month: 'long', day: 'numeric', weekday: 'long' })} · 탭해서 기록하기
-          </p>
-        </button>
-      </div>
-
-      <FmdBadge cycle={cycle} />
-
-      {missed.length > 0 && (
-        <div className="bg-gray-900 border border-gray-800 rounded-xl px-4 py-2.5 text-gray-300 text-sm">
-          아직 오늘 {missed.join(', ')} 기록 안 하셨어요
+    <div className="space-y-5">
+      {/* 히어로 */}
+      <section className="hero p-5">
+        <div className="flex items-start justify-between mb-4">
+          <div>
+            <p className="text-white/55 text-xs">{now.toLocaleDateString('ko-KR', { month: 'long', day: 'numeric', weekday: 'long' })}</p>
+            <h1 className="text-white text-xl font-bold mt-1">오늘의 식단</h1>
+          </div>
+          <FmdBadge cycle={cycle} />
         </div>
-      )}
-
-      <div className="flex gap-2 overflow-x-auto pb-1 -mx-4 px-4 scrollbar-hide">
-        {quickMenus.map(menu => (
-          <button
-            key={menu.id}
-            onClick={() => quickLog(menu)}
-            className="shrink-0 bg-gray-900 hover:bg-gray-800 border border-gray-800 rounded-xl px-3 py-2 text-left transition-colors"
-          >
-            <p className="text-white text-xs font-medium whitespace-nowrap max-w-[140px] truncate">{menu.menuName}</p>
-            <p className="text-gray-500 text-[11px] mt-0.5">{menu.calories}kcal</p>
-          </button>
-        ))}
-      </div>
-
-      <section className="bg-gray-900 rounded-xl p-5">
         <CalorieGauge consumed={totals.calories} targetMin={target.min} targetMax={target.max} />
       </section>
 
-      <section className="bg-gray-900 rounded-xl p-5">
-        <h2 className="text-white font-bold text-sm mb-3">영양소 비율</h2>
+      {/* 미기록 리마인더 */}
+      {missed.length > 0 && (
+        <button onClick={onAdd} className="w-full card px-4 py-3 flex items-center gap-3 text-left">
+          <span className="text-lg">🍽️</span>
+          <span className="text-ink text-sm">
+            아직 오늘 <span className="font-semibold">{missed.join(', ')}</span> 기록 안 하셨어요
+          </span>
+          <span className="ml-auto text-faint text-sm">＋</span>
+        </button>
+      )}
+
+      {/* 즐겨찾는 메뉴 */}
+      <div>
+        <p className="text-muted text-xs font-medium mb-2 px-1">즐겨찾는 메뉴 · 탭하면 바로 기록</p>
+        <div className="flex gap-2 overflow-x-auto pb-1 -mx-4 px-4 scrollbar-hide">
+          {quickMenus.map(menu => (
+            <button
+              key={menu.id}
+              onClick={() => quickLog(menu)}
+              className="shrink-0 card px-3.5 py-2.5 text-left active:scale-[0.97] transition-transform"
+            >
+              <p className="text-ink text-xs font-semibold whitespace-nowrap max-w-[150px] truncate">{menu.menuName}</p>
+              <p className="text-gold text-[11px] font-medium mt-0.5">{menu.calories}kcal</p>
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* 영양소 비율 */}
+      <section className="card p-5">
+        <h2 className="text-ink font-bold text-sm mb-3">영양소 비율</h2>
         <MacroDonut protein={totals.protein} carbs={totals.carbs} fat={totals.fat} />
       </section>
 
-      <section className="bg-gray-900 rounded-xl p-5">
+      {/* 나트륨 */}
+      <section className="card p-5">
         <SodiumBar sodium={totals.sodium} target={settings.targetSodiumMg} />
       </section>
 
+      {/* 오늘의 식사 */}
       <section>
-        <h2 className="text-white font-bold text-sm mb-3">오늘의 식사</h2>
+        <div className="flex items-center justify-between mb-3 px-1">
+          <h2 className="text-ink font-bold text-base">오늘의 식사</h2>
+          <button onClick={onAdd} className="text-navy text-sm font-semibold">＋ 기록하기</button>
+        </div>
         {meals.length === 0 ? (
-          <div className="bg-gray-900 rounded-xl p-6 text-center text-gray-400 text-sm">오늘 기록된 식사가 없어요</div>
+          <button onClick={onAdd} className="w-full card p-8 text-center text-faint text-sm">
+            오늘 뭐 드셨나요? <span className="text-navy font-semibold">탭해서 기록하기</span>
+          </button>
         ) : (
-          <div className="bg-gray-900 rounded-xl overflow-hidden">
+          <div className="card overflow-hidden">
             {meals.map((meal, i) => (
-              <div key={meal.id} className={`flex items-center gap-3 px-4 py-3 ${i !== 0 ? 'border-t border-gray-800' : ''}`}>
+              <div key={meal.id} className={`flex items-center gap-3 px-4 py-3 ${i !== 0 ? 'border-t border-line' : ''}`}>
                 <span className="text-xl shrink-0">{MEAL_TYPE_ICON[meal.mealType]}</span>
                 <div className="flex-1 min-w-0">
-                  <p className="text-white text-sm font-medium truncate">{meal.menuName}</p>
-                  <p className="text-gray-500 text-xs mt-0.5">
+                  <p className="text-ink text-sm font-medium truncate">{meal.menuName}</p>
+                  <p className="text-faint text-xs mt-0.5">
                     {MEAL_TYPE_LABEL[meal.mealType]} · {Math.round(meal.calories)}kcal · 나트륨 {Math.round(meal.sodium)}mg
                   </p>
                 </div>
                 <button
                   onClick={() => deleteMeal(meal.id)}
                   aria-label="삭제"
-                  className="text-gray-600 hover:text-red-400 text-sm shrink-0 px-1"
+                  className="text-faint hover:text-danger text-sm shrink-0 px-1"
                 >
                   ✕
                 </button>

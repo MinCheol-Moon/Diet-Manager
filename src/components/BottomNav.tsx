@@ -10,22 +10,29 @@ const TABS: { screen: Screen; label: string; icon: string }[] = [
 export default function BottomNav({ screen, onChange }: { screen: Screen; onChange: (s: Screen) => void }) {
   return (
     <>
-      <div className="h-20" />
+      <div className="h-24" />
 
-      <nav className="fixed bottom-0 left-0 right-0 z-50 bg-gray-900 border-t border-gray-800">
+      <nav className="fixed bottom-0 left-0 right-0 z-50 bg-surface border-t border-line pb-[env(safe-area-inset-bottom)]">
         <div className="max-w-2xl mx-auto flex">
-          {TABS.map(tab => (
-            <button
-              key={tab.screen}
-              onClick={() => onChange(tab.screen)}
-              className={`flex-1 flex flex-col items-center justify-center py-3 gap-1 transition-colors ${
-                screen === tab.screen ? 'text-emerald-400' : 'text-gray-500 hover:text-gray-300'
-              }`}
-            >
-              <span className="text-xl">{tab.icon}</span>
-              <span className="text-xs font-medium">{tab.label}</span>
-            </button>
-          ))}
+          {TABS.map(tab => {
+            const active = screen === tab.screen
+            return (
+              <button
+                key={tab.screen}
+                onClick={() => onChange(tab.screen)}
+                className="flex-1 flex flex-col items-center justify-center pt-2.5 pb-2 gap-1"
+              >
+                <span
+                  className={`w-12 h-8 rounded-2xl flex items-center justify-center text-lg transition-colors ${
+                    active ? 'bg-navy' : 'bg-transparent'
+                  }`}
+                >
+                  {tab.icon}
+                </span>
+                <span className={`text-[11px] font-semibold ${active ? 'text-navy' : 'text-faint'}`}>{tab.label}</span>
+              </button>
+            )
+          })}
         </div>
       </nav>
 
@@ -33,7 +40,7 @@ export default function BottomNav({ screen, onChange }: { screen: Screen; onChan
         <button
           onClick={() => onChange('add')}
           aria-label="식사 기록 추가"
-          className="fixed right-4 bottom-20 z-50 w-14 h-14 rounded-full bg-emerald-600 hover:bg-emerald-500 text-white text-3xl flex items-center justify-center shadow-lg shadow-emerald-950/50 transition-colors"
+          className="fixed right-4 bottom-24 z-50 w-14 h-14 rounded-full bg-navy hover:bg-navy2 text-white text-3xl flex items-center justify-center shadow-lg shadow-navy/30 transition-colors"
         >
           +
         </button>

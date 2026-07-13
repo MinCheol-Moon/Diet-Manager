@@ -9,19 +9,19 @@ export default function SodiumBar({ sodium, target }: Props) {
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-1.5">
-        <span className="text-gray-400 text-sm">나트륨</span>
-        <span className={`text-sm font-medium ${over ? 'text-red-400' : 'text-gray-300'}`}>
+      <div className="flex items-center justify-between mb-2">
+        <span className="text-ink text-sm font-semibold">나트륨</span>
+        <span className={`text-sm font-medium ${over ? 'text-danger' : 'text-muted'}`}>
           {Math.round(sodium)} / {target}mg
         </span>
       </div>
-      <div className="h-2.5 rounded-full bg-gray-800 overflow-hidden">
+      <div className="h-2.5 rounded-full bg-canvas overflow-hidden">
         <div
-          className={`h-full rounded-full transition-all ${over ? 'bg-red-500' : 'bg-sky-500'}`}
+          className={`h-full rounded-full transition-all ${over ? 'bg-danger' : 'bg-sodium'}`}
           style={{ width: `${pct}%` }}
         />
       </div>
-      {over && <p className="text-red-400 text-xs mt-1.5">⚠️ 나트륨 목표를 초과했어요</p>}
+      {over && <p className="text-danger text-xs mt-2">⚠️ 나트륨 목표를 초과했어요</p>}
     </div>
   )
 }
