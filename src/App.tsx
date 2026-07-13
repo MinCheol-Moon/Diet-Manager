@@ -4,6 +4,7 @@ import { useMealReminders } from './lib/useMealReminders'
 import BottomNav, { type Screen } from './components/BottomNav'
 import TodayScreen from './screens/TodayScreen'
 import AddScreen from './screens/AddScreen'
+import HistoryScreen from './screens/HistoryScreen'
 import StatsScreen from './screens/StatsScreen'
 import SettingsScreen from './screens/SettingsScreen'
 
@@ -25,6 +26,7 @@ export default function App() {
       <main className="max-w-2xl mx-auto px-4 py-5">
         {screen === 'today' && <TodayScreen onAdd={() => setScreen('add')} />}
         {screen === 'add' && <AddScreen onDone={() => setScreen('today')} onCancel={() => setScreen('today')} />}
+        {screen === 'history' && <HistoryScreen />}
         {screen === 'stats' && <StatsScreen onGoSettings={() => setScreen('settings')} />}
         {screen === 'settings' && <SettingsScreen />}
       </main>

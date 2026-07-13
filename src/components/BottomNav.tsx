@@ -1,7 +1,8 @@
-export type Screen = 'today' | 'add' | 'stats' | 'settings'
+export type Screen = 'today' | 'add' | 'history' | 'stats' | 'settings'
 
 const TABS: { screen: Screen; label: string; icon: string }[] = [
   { screen: 'today', label: '오늘', icon: '🥗' },
+  { screen: 'history', label: '기록', icon: '📅' },
   { screen: 'stats', label: '통계', icon: '📊' },
   { screen: 'settings', label: '설정', icon: '⚙️' },
 ]
