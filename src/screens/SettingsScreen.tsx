@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { clearAll, deleteQuickMenu, exportAll, updateSettings, useQuickMenus, useSettings } from '../lib/store'
 import { AI_MODELS } from '../lib/constants'
+import { formatDateKeyKorean, todayKey } from '../lib/date'
 import type { Settings } from '../lib/types'
 
 export default function SettingsScreen() {
@@ -81,6 +82,25 @@ export default function SettingsScreen() {
             onChange={e => updateSettings({ fmdCycleStartDate: e.target.value || null })}
             className="field"
           />
+          <div className="flex items-center gap-2 mt-2">
+            <button
+              onClick={() => updateSettings({ fmdCycleStartDate: todayKey() })}
+              className="btn-primary text-xs px-3 py-2"
+            >
+              오늘로 설정
+            </button>
+            {settings.fmdCycleStartDate && (
+              <button
+                onClick={() => updateSettings({ fmdCycleStartDate: null })}
+                className="bg-canvas hover:bg-line text-muted text-xs font-medium px-3 py-2 rounded-lg transition-colors"
+              >
+                해제
+              </button>
+            )}
+          </div>
+          {settings.fmdCycleStartDate && (
+            <p className="text-good text-xs mt-2">✓ 시작일: {formatDateKeyKorean(settings.fmdCycleStartDate)}</p>
+          )}
         </div>
       </Section>
 

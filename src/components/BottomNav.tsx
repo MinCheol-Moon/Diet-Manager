@@ -38,7 +38,7 @@ export default function BottomNav({ screen, onChange, onAdd }: { screen: Screen;
         </div>
       </nav>
 
-      {screen !== 'add' && <DraggableFab onOpen={onAdd} />}
+      {(screen === 'today' || screen === 'history') && <DraggableFab onOpen={onAdd} />}
     </>
   )
 }
