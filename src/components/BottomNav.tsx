@@ -9,7 +9,7 @@ const TABS: { screen: Screen; label: string; icon: string }[] = [
   { screen: 'settings', label: '설정', icon: '⚙️' },
 ]
 
-export default function BottomNav({ screen, onChange }: { screen: Screen; onChange: (s: Screen) => void }) {
+export default function BottomNav({ screen, onChange, onAdd }: { screen: Screen; onChange: (s: Screen) => void; onAdd: () => void }) {
   return (
     <>
       <div className="h-24" />
@@ -38,7 +38,7 @@ export default function BottomNav({ screen, onChange }: { screen: Screen; onChan
         </div>
       </nav>
 
-      {screen !== 'add' && <DraggableFab onOpen={() => onChange('add')} />}
+      {screen !== 'add' && <DraggableFab onOpen={onAdd} />}
     </>
   )
 }

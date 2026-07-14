@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { addMeal, addQuickMenu, useQuickMenus, useSettings } from '../lib/store'
 import { DEFAULT_QUICK_MENUS } from '../lib/constants'
 import { suggestMealTypeByTime } from '../lib/fmd'
-import { todayKey } from '../lib/date'
+import { formatDateKeyKorean, todayKey } from '../lib/date'
 import { MEAL_TYPE_LABEL, type InputMethod, type MealType, type Nutrition, type QuickMenu } from '../lib/types'
 import { estimateFromPhoto, estimateFromText, friendlyAiError } from '../lib/ai'
 import { resizeImageToDataUrl } from '../lib/resizeImage'
@@ -16,11 +16,12 @@ interface DraftItem extends Nutrition {
   saveAsQuick: boolean
 }
 
-export default function AddScreen({ onDone, onCancel }: { onDone: () => void; onCancel: () => void }) {
+export default function AddScreen({ date, onDone, onCancel }: { date: string; onDone: () => void; onCancel: () => void }) {
   const settings = useSettings()
   const customMenus = useQuickMenus()
   const quickMenus: QuickMenu[] = [...DEFAULT_QUICK_MENUS, ...customMenus]
 
+  const [mealDate, setMealDate] = useState(date)
   const [mealType, setMealType] = useState<MealType>(suggestMealTypeByTime())
   const [items, setItems] = useState<DraftItem[]>([])
 
@@ -123,10 +124,9 @@ export default function AddScreen({ onDone, onCancel }: { onDone: () => void; on
       setError('메뉴를 하나 이상 추가해주세요.')
       return
     }
-    const date = todayKey()
     for (const it of finalItems) {
       addMeal({
-        date,
+        date: mealDate,
         mealType,
         menuName: it.menuName,
         calories: it.calories,
@@ -148,6 +148,24 @@ export default function AddScreen({ onDone, onCancel }: { onDone: () => void; on
         <button onClick={onCancel} className="text-muted hover:text-ink text-sm">
           취소
         </button>
+      </div>
+
+      {/* 날짜 */}
+      <div className="card p-4 flex items-center justify-between gap-3">
+        <div>
+          <p className="text-muted text-xs font-medium">기록할 날짜</p>
+          <p className="text-ink text-sm font-semibold mt-0.5">
+            {mealDate === todayKey() ? '오늘 · ' : ''}
+            {formatDateKeyKorean(mealDate)}
+          </p>
+        </div>
+        <input
+          type="date"
+          value={mealDate}
+          max={todayKey()}
+          onChange={e => setMealDate(e.target.value || todayKey())}
+          className="field w-auto"
+        />
       </div>
 
       {/* 끼니 */}

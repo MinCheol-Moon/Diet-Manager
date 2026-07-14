@@ -6,7 +6,7 @@ import { MEAL_TYPE_ICON, MEAL_TYPE_LABEL, type Meal, type MealType } from '../li
 const WEEKDAYS = ['일', '월', '화', '수', '목', '금', '토']
 const MEAL_ORDER: MealType[] = ['breakfast', 'lunch', 'dinner', 'snack']
 
-export default function HistoryScreen() {
+export default function HistoryScreen({ onAddForDate }: { onAddForDate: (dateKey: string) => void }) {
   const meals = useMeals()
   const now = new Date()
   const [viewYear, setViewYear] = useState(now.getFullYear())
@@ -127,11 +127,15 @@ export default function HistoryScreen() {
       <section>
         <div className="flex items-center justify-between mb-3 px-1">
           <h2 className="text-ink font-bold text-base">{selLabel}</h2>
-          {selectedMeals.length > 0 && <span className="text-gold text-sm font-bold">{Math.round(selectedTotal.calories)}kcal</span>}
+          <button onClick={() => onAddForDate(selected)} className="text-navy text-sm font-semibold">
+            ＋ 이 날짜에 추가
+          </button>
         </div>
 
         {selectedMeals.length === 0 ? (
-          <div className="card p-8 text-center text-faint text-sm">이 날은 기록이 없어요</div>
+          <button onClick={() => onAddForDate(selected)} className="w-full card p-8 text-center text-faint text-sm">
+            이 날은 기록이 없어요 · <span className="text-navy font-semibold">추가하기</span>
+          </button>
         ) : (
           <div className="space-y-3">
             {MEAL_ORDER.map(type => {

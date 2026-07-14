@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useMeals, useSettings } from './lib/store'
 import { useMealReminders } from './lib/useMealReminders'
+import { todayKey } from './lib/date'
 import BottomNav, { type Screen } from './components/BottomNav'
 import TodayScreen from './screens/TodayScreen'
 import AddScreen from './screens/AddScreen'
@@ -10,10 +11,18 @@ import SettingsScreen from './screens/SettingsScreen'
 
 export default function App() {
   const [screen, setScreen] = useState<Screen>('today')
+  const [addDate, setAddDate] = useState(todayKey())
+  const [addReturn, setAddReturn] = useState<Screen>('today')
   const settings = useSettings()
   const meals = useMeals()
 
   useMealReminders(settings, meals)
+
+  function openAdd(date: string, from: Screen) {
+    setAddDate(date)
+    setAddReturn(from)
+    setScreen('add')
+  }
 
   const dateLabel = new Date().toLocaleDateString('ko-KR', { month: 'long', day: 'numeric', weekday: 'short' })
 
@@ -27,14 +36,14 @@ export default function App() {
       </header>
 
       <main className="max-w-2xl mx-auto px-4 py-5">
-        {screen === 'today' && <TodayScreen onAdd={() => setScreen('add')} />}
-        {screen === 'add' && <AddScreen onDone={() => setScreen('today')} onCancel={() => setScreen('today')} />}
-        {screen === 'history' && <HistoryScreen />}
+        {screen === 'today' && <TodayScreen onAdd={() => openAdd(todayKey(), 'today')} />}
+        {screen === 'add' && <AddScreen date={addDate} onDone={() => setScreen(addReturn)} onCancel={() => setScreen(addReturn)} />}
+        {screen === 'history' && <HistoryScreen onAddForDate={d => openAdd(d, 'history')} />}
         {screen === 'stats' && <StatsScreen onGoSettings={() => setScreen('settings')} />}
         {screen === 'settings' && <SettingsScreen />}
       </main>
 
-      <BottomNav screen={screen} onChange={setScreen} />
+      <BottomNav screen={screen} onChange={setScreen} onAdd={() => openAdd(todayKey(), 'today')} />
     </div>
   )
 }

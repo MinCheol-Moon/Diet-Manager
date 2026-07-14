@@ -19,3 +19,11 @@ export function addDays(date: Date, days: number): Date {
   d.setDate(d.getDate() + days)
   return d
 }
+
+const WEEKDAYS = ['일', '월', '화', '수', '목', '금', '토']
+
+export function formatDateKeyKorean(key: string): string {
+  const [, m, d] = key.split('-').map(Number)
+  const w = WEEKDAYS[parseDateKey(key).getDay()]
+  return `${m}월 ${d}일 (${w})`
+}
